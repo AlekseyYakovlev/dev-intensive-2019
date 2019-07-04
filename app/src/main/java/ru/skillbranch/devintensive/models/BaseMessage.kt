@@ -18,7 +18,8 @@ abstract class BaseMessage(
             chat: Chat,
             date: Date = Date(),
             type: String = "text",
-            payload: Any?
+            payload: Any?,
+            isIncoming: Boolean=false
         ): BaseMessage {
             lastId++
             return when (type) {
@@ -27,14 +28,16 @@ abstract class BaseMessage(
                     from,
                     chat,
                     date = date,
-                    image = payload as String
+                    image = payload as String,
+                    isIncoming = isIncoming
                 )
                 else -> TextMessage(
                     "$lastId",
                     from,
                     chat,
                     date = date,
-                    text = payload as String
+                    text = payload as String,
+                    isIncoming = isIncoming
                 )
             }
         }

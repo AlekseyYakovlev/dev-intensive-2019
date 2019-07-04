@@ -9,14 +9,12 @@ const val HOUR = 60 * MINUTE
 const val DAY = 24 * HOUR
 
 
-fun Date.format(pattern: String = "HH:mm:ss dd:MM:yy"): String {
+fun Date.format(pattern: String = "HH:mm:ss dd.MM.yy"): String {
     val dateFormat = SimpleDateFormat(pattern, Locale("ru"))
     return dateFormat.format(this)
 }
 
 fun Date.add(value: Int, unit: TimeUnits): Date {
-    //var time = this.time
-
     time += when (unit) {
         TimeUnits.SECOND -> value * SECOND
         TimeUnits.MINUTE -> value * MINUTE
@@ -31,58 +29,15 @@ fun Date.humanizeDiff(): String =
         in (0..SECOND) -> "только что"
         in (SECOND..45 * SECOND) -> "несколько секунд назад"
         in (45 * SECOND..75 * SECOND) -> "минуту назад"
-        in (75 * SECOND..45 * MINUTE) -> "${diff.toStringTimeFormat(TimeUnits.MINUTE)} назад"
+        in (75 * SECOND..45 * MINUTE) -> "${TimeUnits.MINUTE.plural(diff.toInt())} назад"
         in (45 * MINUTE..75 * MINUTE) -> "час назад"
-        in (75 * MINUTE..22 * HOUR) -> "${diff.toStringTimeFormat(TimeUnits.HOUR)} назад"
+        in (75 * MINUTE..22 * HOUR) -> "$${TimeUnits.HOUR.plural(diff.toInt())} назад"
         in (22 * HOUR..26 * HOUR) -> "день назад"
-        in (26 * HOUR..360 * DAY) -> "${diff.toStringTimeFormat(TimeUnits.DAY)} назад"
+        in (26 * HOUR..360 * DAY) -> "$${TimeUnits.DAY.plural(diff.toInt())} назад"
         in (360 * DAY..Long.MAX_VALUE) -> "более года назад"
         else -> "Ошибка!"
     }
 
-private fun Long.toStringTimeFormat(timeUnit: TimeUnits): String {
-    val divider = when (timeUnit) {
-        TimeUnits.SECOND -> SECOND
-        TimeUnits.MINUTE -> MINUTE
-        TimeUnits.HOUR -> HOUR
-        TimeUnits.DAY -> DAY
-    }
-    val units: Long = this / divider
-
-    val rangeType = when {
-        units in (5..20) || units % 10 in (5..10) -> 3
-        units % 10 == 1L -> 1
-        units % 10 in (2..4) -> 2
-        else -> 0
-    }
-
-    return when (timeUnit) {
-        TimeUnits.SECOND -> when (rangeType) {
-            1 -> "$units секунду"
-            2 -> "$units секунды"
-            3 -> "$units секунд"
-            else -> "ошибка"
-        }
-        TimeUnits.MINUTE -> when (rangeType) {
-            1 -> "$units минуту"
-            2 -> "$units минуты"
-            3 -> "$units минут"
-            else -> "ошибка"
-        }
-        TimeUnits.HOUR -> when (rangeType) {
-            1 -> "$units час"
-            2 -> "$units часа"
-            3 -> "$units часов"
-            else -> "ошибка"
-        }
-        TimeUnits.DAY -> when (rangeType) {
-            1 -> "$units день"
-            2 -> "$units дня"
-            3 -> "$units дней"
-            else -> "ошибка"
-        }
-    }
-}
 
 enum class TimeUnits {
     SECOND,
@@ -90,7 +45,7 @@ enum class TimeUnits {
     HOUR,
     DAY;
 
-    fun plural(value:Int):String {
+    fun plural(value: Int): String {
         val rangeType = when {
             value in (5..20) || value % 10 in (5..10) -> 3
             value % 10 == 1 -> 1
@@ -125,4 +80,20 @@ enum class TimeUnits {
             }
         }
     }
+}
+
+fun String.truncate(newLength: Int = 16): String {
+    val trimmedString = this.trimEnd()
+    val trimmedLength = trimmedString.length
+    return if (newLength + 1 < trimmedLength) "${this.substring(0, newLength + 1).trimEnd()}..."
+    else trimmedString
+}
+
+fun String.stripHtml(): String {
+
+    var res = """<.+?>""".toRegex().replace(this, "")
+    res = """&.+?;""".toRegex().replace(res, "")
+    res = "\\s+".toRegex().replace(res, " ")
+
+    return res
 }
