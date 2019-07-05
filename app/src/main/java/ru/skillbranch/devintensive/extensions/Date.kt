@@ -75,7 +75,6 @@ enum class TimeUnits {
             value % 10 in (2..4) -> 2
             else -> 3
         }
-//        Log.d("123456", "value $value rangeType $rangeType")
 
         return when (this) {
             SECOND -> when (rangeType) {
@@ -104,20 +103,4 @@ enum class TimeUnits {
             }
         }
     }
-}
-
-fun String.truncate(newLength: Int = 16): String {
-    val trimmedString = this.trimEnd()
-    val trimmedLength = trimmedString.length
-    return if (newLength < trimmedLength) "${this.substring(0, newLength).trimEnd()}..."
-    else trimmedString
-}
-
-fun String.stripHtml(): String {
-
-    var res = """<.+?>""".toRegex().replace(this, "")
-    res = """&.+?;""".toRegex().replace(res, "")
-    res = "\\s+".toRegex().replace(res, " ")
-
-    return res
 }
