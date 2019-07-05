@@ -24,19 +24,41 @@ fun Date.add(value: Int, unit: TimeUnits): Date {
     return this
 }
 
-fun Date.humanizeDiff(): String =
-    when (val diff = Date().time - this.time) {
-        in (0..SECOND) -> "только что"
-        in (SECOND..45 * SECOND) -> "несколько секунд назад"
-        in (45 * SECOND..75 * SECOND) -> "минуту назад"
-        in (75 * SECOND..45 * MINUTE) -> "${TimeUnits.MINUTE.plural((diff / MINUTE).toInt())} назад"
-        in (45 * MINUTE..75 * MINUTE) -> "час назад"
-        in (75 * MINUTE..22 * HOUR) -> "${TimeUnits.HOUR.plural((diff / HOUR).toInt())} назад"
-        in (22 * HOUR..26 * HOUR) -> "день назад"
-        in (26 * HOUR..360 * DAY) -> "${TimeUnits.DAY.plural((diff / DAY).toInt())} назад"
-        in (360 * DAY..Long.MAX_VALUE) -> "более года назад"
+fun Date.humanizeDiff(): String {
+    var diff = Date().time - this.time
+    var isInFuture=false
+    val pattern =
+        if (diff > 0) "%s назад"
+        else {
+            isInFuture=true
+            diff = -diff
+            "через %s"
+        }
+
+    return when (diff) {
+        in (0..SECOND) ->
+            "только что"
+        in (SECOND..45 * SECOND) ->
+            pattern.format("несколько секунд")
+        in (45 * SECOND..75 * SECOND) ->
+            pattern.format("минуту")
+        in (75 * SECOND..45 * MINUTE) ->
+            pattern.format(TimeUnits.MINUTE.plural((diff / MINUTE).toInt()))
+        in (45 * MINUTE..75 * MINUTE) ->
+            pattern.format("час")
+        in (75 * MINUTE..22 * HOUR) ->
+            pattern.format(TimeUnits.HOUR.plural((diff / HOUR).toInt()))
+        in (22 * HOUR..26 * HOUR) ->
+            pattern.format("день")
+        in (26 * HOUR..360 * DAY) ->
+            pattern.format(TimeUnits.DAY.plural((diff / DAY).toInt()))
+        in (360 * DAY..Long.MAX_VALUE) ->
+            if (isInFuture) pattern.format("более чем год")
+            else pattern.format("более года")
+
         else -> "Ошибка!"
     }
+}
 
 
 enum class TimeUnits {
