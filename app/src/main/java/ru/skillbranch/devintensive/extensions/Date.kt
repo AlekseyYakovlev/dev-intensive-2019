@@ -85,7 +85,7 @@ enum class TimeUnits {
 fun String.truncate(newLength: Int = 16): String {
     val trimmedString = this.trimEnd()
     val trimmedLength = trimmedString.length
-    return if (newLength + 1 < trimmedLength) "${this.substring(0, newLength + 1).trimEnd()}..."
+    return if (newLength < trimmedLength) "${this.substring(0, newLength).trimEnd()}..."
     else trimmedString
 }
 
