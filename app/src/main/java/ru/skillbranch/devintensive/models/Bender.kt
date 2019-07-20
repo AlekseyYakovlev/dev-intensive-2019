@@ -71,6 +71,10 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
 
         fun restart(): Question = NAME
 
+
+
+
+
         fun validate(answer: String): String? = when (this) {
             NAME ->
                 "Имя должно начинаться с заглавной буквы"
