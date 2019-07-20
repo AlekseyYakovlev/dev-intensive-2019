@@ -32,7 +32,6 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
             }
         }
 
-
     enum class Status(val color: Triple<Int, Int, Int>) {
         NORMAL(Triple(255, 255, 255)),
         WARNING(Triple(255, 120, 0)),
@@ -71,10 +70,6 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
 
         fun restart(): Question = NAME
 
-
-
-
-
         fun validate(answer: String): String? = when (this) {
             NAME ->
                 "Имя должно начинаться с заглавной буквы"
@@ -94,7 +89,5 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
             IDLE ->
                 null
         }
-
-
     }
 }
