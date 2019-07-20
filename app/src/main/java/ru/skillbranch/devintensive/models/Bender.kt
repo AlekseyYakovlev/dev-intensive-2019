@@ -83,7 +83,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
                     .takeUnless { answer.findAnyOf(('0'..'9').map { it.toString() }) == null }
             BDAY ->
                 "Год моего рождения должен содержать только цифры"
-                    .takeUnless { answer.matches("[0-9]".toRegex()) }
+                    .takeUnless { answer.matches("[0-9]+".toRegex()) }
             SERIAL ->
                 "Серийный номер содержит только цифры, и их 7"
                     .takeUnless { answer.matches("[0-9]{7}".toRegex()) }
