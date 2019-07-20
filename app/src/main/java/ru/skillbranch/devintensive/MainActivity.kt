@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         benderImage = iv_bender
         textTxt = tv_text
         messageEt = et_message
-        sendBtn = iv_send_button
+        sendBtn = iv_send
 
         val statusName = savedInstanceState?.getString("STATUS") ?: Bender.Status.NORMAL.name
         val questionName = savedInstanceState?.getString("QUESTION") ?: Bender.Question.NAME.name

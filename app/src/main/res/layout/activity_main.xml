@@ -47,7 +47,7 @@
                 android:singleLine="true"
         />
         <ImageView
-                android:id="@+id/iv_send_button"
+                android:id="@+id/iv_send"
                 android:layout_width="@dimen/image_send_button_size"
                 android:layout_height="@dimen/image_send_button_size"
                 android:src="@drawable/ic_send_white_24dp"
