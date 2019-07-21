@@ -13,13 +13,16 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
 
     fun listenAnswer(answer: String): Pair<String, Triple<Int, Int, Int>> =
         when {
-            question.validate(answer)!=null -> {
+            question.validate(answer) != null -> {
                 val validationError = question.validate(answer)
                 "$validationError\n${question.question}" to status.color
             }
             question.answers.contains(answer.toLowerCase()) -> {
                 question = question.nextQuestion()
                 "Отлично - ты справился\n${question.question}" to status.color
+            }
+            question==Question.IDLE ->{
+                question.question to status.color
             }
             else -> {
                 status = status.nextStatus()
@@ -73,10 +76,10 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         fun validate(answer: String): String? = when (this) {
             NAME ->
                 "Имя должно начинаться с заглавной буквы"
-                    .takeUnless { answer[0] in ('A'..'Z') }
+                    .takeUnless { answer.isNotEmpty() && answer[0].isUpperCase() }
             PROFESSION ->
                 "Профессия должна начинаться со строчной буквы"
-                    .takeUnless { answer[0] in ('a'..'z') }
+                    .takeUnless { answer.isNotEmpty() && answer[0].isLowerCase() }
             MATERIAL ->
                 "Материал не должен содержать цифр"
                     .takeUnless { answer.findAnyOf(('0'..'9').map { it.toString() }) == null }
