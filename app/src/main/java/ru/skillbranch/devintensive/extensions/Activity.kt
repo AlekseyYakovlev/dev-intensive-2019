@@ -9,13 +9,14 @@ fun Activity.hideKeyboard() {
     view?.let { v ->
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         imm?.hideSoftInputFromWindow(v.windowToken, 0)
+
     }
 }
 
-fun Activity.isKeyboardOpen():Boolean {
- return true
+fun Activity.isKeyboardOpen(): Boolean {
+    val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+    //isInputViewShown()
+    return imm?.isAcceptingText ?: false
 }
 
-fun Activity.isKeyboardClosed():Boolean {
-    return true
-}
+fun Activity.isKeyboardClosed(): Boolean = !isKeyboardOpen()
