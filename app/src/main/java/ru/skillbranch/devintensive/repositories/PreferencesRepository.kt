@@ -2,6 +2,7 @@ package ru.skillbranch.devintensive.repositories
 
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import androidx.appcompat.app.AppCompatDelegate
 import ru.skillbranch.devintensive.App
 import ru.skillbranch.devintensive.models.Profile
 
@@ -43,9 +44,10 @@ object PreferencesRepository {
 
     fun saveAppTheme(theme: Int) {
         putValue(APP_THEME to theme)
+
     }
 
-    fun getAppTheme(): Int = prefs.getInt(APP_THEME, 0)
+    fun getAppTheme(): Int = prefs.getInt(APP_THEME, AppCompatDelegate.MODE_NIGHT_NO)
 
     private fun putValue(pair: Pair<String, Any>) = with(prefs.edit()) {
         val key = pair.first
@@ -61,6 +63,4 @@ object PreferencesRepository {
         }
         apply()
     }
-
-
 }
