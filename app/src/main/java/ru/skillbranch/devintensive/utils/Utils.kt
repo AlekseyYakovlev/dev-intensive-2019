@@ -2,6 +2,19 @@ package ru.skillbranch.devintensive.utils
 
 
 object Utils {
+    private val excludeRepoList = listOf("enterprise",
+        "features",
+        "topics",
+        "collections",
+        "trending",
+        "events",
+        "marketplace",
+        "pricing",
+        "nonprofit",
+        "customer-stories",
+        "security",
+        "login",
+        "join")
 
     private val dictionary = mutableMapOf(
         "А" to "A",
@@ -102,6 +115,41 @@ object Utils {
     private fun replaceSymbolByDictionary(input: String): String =
         dictionary[input] ?: input
 
+    fun validateRepository(repo: String) : Boolean{
+        val repoPattern = Regex("^(?:https://|https:\\\\\\\\|)(?:www\\.|)github\\.com/((?:(?:\\d|\\w)|(?:\\d|\\w)-)*(?:\\d|\\w)|(?:\\d|\\w))(?:/|\\\\|)\$", setOf(RegexOption.IGNORE_CASE))
+        val githubPattern = Regex("^(?:https://|https:\\\\\\\\|)(?:www\\.|)github\\.com/",setOf(RegexOption.IGNORE_CASE))
+        val restrictedWords = arrayOf(
+            "enterprise",
+            "features",
+            "topics",
+            "collections",
+            "trending",
+            "events",
+            "marketplace",
+            "pricing",
+            "nonprofit",
+            "customer-stories",
+            "security",
+            "login",
+            "join"
+        )
+        return if (repoPattern.matches(repo)){
+            val userName = repo
+                .replace(githubPattern, "")
+                .replace("/","")
+                .replace("\\","")
+            restrictedWords.indexOf(userName) == -1
+        }else{
+            false
+        }
+    }
 
+    fun isGithubAccValid(url: CharSequence?): Boolean {
+        val githubAccount = "(https://)?(www.)?github.com/[^/]+".toRegex()
 
+        return url != null && (url.isEmpty() ||
+                (githubAccount.matches(url)) &&
+                excludeRepoList.all { !url.contains("github.com/$it") }
+                )
+    }
 }
