@@ -42,7 +42,8 @@
                     android:src="@drawable/avatar_default"
                     android:layout_centerHorizontal="true"
                     app:cv_borderColor="@android:color/white"
-                    app:cv_borderWidth="2dp"/>
+                    app:cv_borderWidth="2dp"
+            />
 
 
             <ImageButton

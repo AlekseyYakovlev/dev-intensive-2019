@@ -3,26 +3,25 @@ package ru.skillbranch.devintensive.ui.custom
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.DisplayMetrics
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.appcompat.widget.AppCompatImageView
 import ru.skillbranch.devintensive.R
 import kotlin.math.min
-import android.graphics.Shader
-import android.graphics.BitmapShader
-import android.graphics.drawable.Drawable
-import android.os.Build
-import android.widget.ImageView
 
 
 class CircleImageView @JvmOverloads constructor(
-    context : Context,
-    attrs : AttributeSet? = null,
-    defStyleAttr : Int = 0
-) : AppCompatImageView(context,attrs,defStyleAttr) {
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : AppCompatImageView(context, attrs, defStyleAttr) {
     companion object {
         private const val DEFAULT_BORDER_COLOR = Color.WHITE
         private const val DEFAULT_BORDER_WIDTH = 2f
+
     }
 
     // Properties
@@ -39,12 +38,12 @@ class CircleImageView @JvmOverloads constructor(
             paintBackground.color = field
             invalidate()
         }
-    var borderWidth: Float = DEFAULT_BORDER_WIDTH
+    var _borderWidth: Float = DEFAULT_BORDER_WIDTH
         set(value) {
             field = value
             update()
         }
-    var borderColor: Int = DEFAULT_BORDER_COLOR
+    var _borderColor: Int = DEFAULT_BORDER_COLOR
         set(value) {
             field = value
             update()
@@ -76,12 +75,9 @@ class CircleImageView @JvmOverloads constructor(
         if (attrs != null) {
             val attributes = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView, defStyleAttr, 0)
 
-            // Init Background Color
-            //circleColor = attributes.getColor(R.styleable.CircularImageView_civ_circle_color, Color.WHITE)
-
             val defaultBorderSize = DEFAULT_BORDER_WIDTH * getContext().resources.displayMetrics.density
-            borderWidth = attributes.getDimension(R.styleable.CircleImageView_cv_borderWidth, defaultBorderSize)
-            borderColor = attributes.getColor(R.styleable.CircleImageView_cv_borderColor, Color.WHITE)
+            _borderWidth = attributes.getDimension(R.styleable.CircleImageView_cv_borderWidth, defaultBorderSize)
+            _borderColor = attributes.getColor(R.styleable.CircleImageView_cv_borderColor, Color.WHITE)
 
             attributes.recycle()
         }
@@ -98,7 +94,12 @@ class CircleImageView @JvmOverloads constructor(
 
     override fun setScaleType(scaleType: ScaleType) {
         if (scaleType != ScaleType.CENTER_CROP && scaleType != ScaleType.CENTER_INSIDE) {
-            throw IllegalArgumentException(String.format("ScaleType %s not supported. " + "Just ScaleType.CENTER_CROP & ScaleType.CENTER_INSIDE are available for this library.", scaleType))
+            throw IllegalArgumentException(
+                String.format(
+                    "ScaleType %s not supported. " + "Just ScaleType.CENTER_CROP & ScaleType.CENTER_INSIDE are available for this library.",
+                    scaleType
+                )
+            )
         } else {
             super.setScaleType(scaleType)
         }
@@ -113,7 +114,7 @@ class CircleImageView @JvmOverloads constructor(
         // Check if civImage isn't null
         if (civImage == null) return
 
-        val circleCenterWithBorder = circleCenter + borderWidth
+        val circleCenterWithBorder = circleCenter + _borderWidth
 
         // Draw Border
         canvas.drawCircle(circleCenterWithBorder, circleCenterWithBorder, circleCenterWithBorder, paintBorder)
@@ -132,8 +133,8 @@ class CircleImageView @JvmOverloads constructor(
 
         heightCircle = min(usableWidth, usableHeight)
 
-        circleCenter = (heightCircle - borderWidth * 2) / 2
-        paintBorder.color = if (borderWidth == 0f) circleColor else borderColor
+        circleCenter = (heightCircle - _borderWidth * 2) / 2
+        paintBorder.color = if (_borderWidth == 0f) circleColor else _borderColor
 
         invalidate()
     }
@@ -206,7 +207,8 @@ class CircleImageView @JvmOverloads constructor(
             is BitmapDrawable -> drawable.bitmap
             else -> try {
                 // Create Bitmap object out of the drawable
-                val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+                val bitmap =
+                    Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
                 val canvas = Canvas(bitmap)
                 drawable.setBounds(0, 0, canvas.width, canvas.height)
                 drawable.draw(canvas)
@@ -234,8 +236,33 @@ class CircleImageView @JvmOverloads constructor(
             else -> heightCircle // The parent has not imposed any constraint on the child.
         }
     }
-    //endregion
 
 
+    fun setBorderWidth(dp: Int) {
+        _borderWidth = convertDpToPixels(dp.toFloat(), context)
+    }
+
+    fun getBorderWidth() = convertPixelsToDp(_borderWidth, context).toInt()
+
+    fun setBorderColor(hex: String) {
+        _borderColor = Color.parseColor(hex)
+    }
+
+    fun setBorderColor(@ColorRes colorId: Int) {
+
+        @ColorInt val color= context.resources.getColor(colorId,context.theme)
+        _borderColor = color
+    }
+
+    fun getBorderColor(): Int = _borderColor
+
+
+    fun convertDpToPixels(dp: Float, context: Context): Float {
+        return dp * (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+    }
+
+    fun convertPixelsToDp(px: Float, context: Context): Float {
+        return px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+    }
 
 }
