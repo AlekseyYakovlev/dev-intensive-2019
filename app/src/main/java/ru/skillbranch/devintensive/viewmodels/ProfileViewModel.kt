@@ -41,6 +41,7 @@ class ProfileViewModel : ViewModel() {
             appTheme.value = AppCompatDelegate.MODE_NIGHT_YES
         }
 
-        appTheme.value?.let{repository.saveAppTheme(it)}
+        repository.saveAppTheme(appTheme.value!!)
+        //appTheme.value?.let{repository.saveAppTheme(it)}
     }
 }
