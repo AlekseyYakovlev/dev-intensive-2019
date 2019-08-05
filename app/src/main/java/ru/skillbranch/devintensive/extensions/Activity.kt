@@ -15,7 +15,6 @@ fun Activity.hideKeyboard() {
 
 fun Activity.isKeyboardOpen(): Boolean {
     val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-    //isInputViewShown()
     return imm?.isAcceptingText ?: false
 }
 
