@@ -33,7 +33,7 @@ object PreferencesRepository {
     }
 
     fun getProfile(): Profile = Profile(
-        prefs.getString("REPOSITORY", "")!!,
+        prefs.getString("FIRST_NAME", "")!!,
         prefs.getString("LAST_NAME", "")!!,
         prefs.getString("ABOUT", "")!!,
         prefs.getString("REPOSITORY", "")!!,
