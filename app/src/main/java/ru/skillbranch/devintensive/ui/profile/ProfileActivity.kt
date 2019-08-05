@@ -6,7 +6,6 @@ import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Patterns
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -18,7 +17,6 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
 import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
-import java.net.URL
 
 class ProfileActivity : AppCompatActivity() {
     companion object {
@@ -107,15 +105,8 @@ class ProfileActivity : AppCompatActivity() {
                 } else {
                     wr_repository.isErrorEnabled = true
                     wr_repository.error = "Невалидный адрес репозитория"
-//                    scroll.smoothScrollTo(0, scroll.bottom)
                 }
-
-//                p0?.let {
-//                    if (it.isNotEmpty() && !isRepositoryValid(it.toString())) wr_repository.error = "Невалидный адрес репозитория"
-//                    else wr_repository.error = ""
-//                }
             }
-
         })
     }
 
@@ -165,38 +156,5 @@ class ProfileActivity : AppCompatActivity() {
             viewModel.saveProfileDate(this)
         }
     }
-
-    fun isRepositoryValid(text: String): Boolean {
-//        var url = text
-//        if (!Patterns.WEB_URL.matcher(url.toLowerCase()).matches()) return false
-//        if (!url.contains("https://"))  url = "https://$text"
-//        try {
-//            val mUrl = URL(url.toLowerCase())
-//            if (!mUrl.host.contains("github.com")) return false
-//            exclusions.forEach {
-//                if (mUrl.path.contains(it)||mUrl.path.replaceFirst("/", "").isEmpty()) return false
-//            }
-//            return true
-//        } catch (e: Exception){
-//            return false
-//        }
-        return Utils.isGithubAccValid(text)
-    }
-
-    val exclusions = listOf(
-        "enterprise",
-        "features",
-        "topics",
-        "collections",
-        "trending",
-        "events",
-        "marketplace",
-        "pricing",
-        "nonprofit",
-        "customer-stories",
-        "security",
-        "login",
-        "join"
-    )
 }
 
